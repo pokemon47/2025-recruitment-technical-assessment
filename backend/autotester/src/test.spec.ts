@@ -47,10 +47,26 @@ describe("Task 2", () => {
       const meatball = {
         type: "recipe",
         name: "Meatball",
-        requiredItems: [{ name: "Beef", quantity: 1 }],
+        requiredItems: [{ name: "Beef", quantity: 1 }, { name: "Meatball2", quantity: 1 }],
       };
       const resp1 = await putTask2(meatball);
       expect(resp1.status).toBe(200);
+      
+      const fakemeatball = {
+        type: "recipe",
+        name: "FakeMeatball",
+        requiredItems: [{ name: "FakeMeatball", quantity: 1 }],
+      };
+      const resp2 = await putTask2(fakemeatball);
+      expect(resp2.status).toBe(400);
+      
+      const meatball2 = {
+        type: "recipe",
+        name: "Meatball2",
+        requiredItems: [{ name: "Meatball", quantity: 1 }],
+      };
+      const resp3 = await putTask2(meatball2);
+      expect(resp3.status).toBe(400);
     });
 
     it("Congratulations u burnt the pan pt2", async () => {
