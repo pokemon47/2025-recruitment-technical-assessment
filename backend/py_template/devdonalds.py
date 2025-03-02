@@ -49,7 +49,7 @@ def parse_handwriting(recipeName: str) -> Union[str, None]:
 	result = re.sub(r"[-_ ]+", " ", recipeName)
 
 	# 2) Only keep alphabets and space
-	result = re.sub(r"[^a-zA-Z ]+", "", result)
+	result = re.sub(r"[^a-zA-Z ]+", "", result.strip())
 
 	return result.title() if result != "" else None
 
@@ -62,7 +62,7 @@ def create_entry():
 	# Validate the type field
 	entry_type = data.get('type')
 	if not entry_type or (entry_type not in ["recipe", "ingredient"]):
-		return 'Incorrect input, type can only be "recipe" or "ingredient".', 400
+		return 'Incorrect input, type can only be "recipe" or "ingredient"', 400
 
 	# Validate the name field
 	entry_name = data.get('name')
@@ -111,7 +111,7 @@ def create_entry():
 # This function is intended to be used for cycle detection when inserting an edge.
 # This could be avoided if the requirements insisted a recipe cannot be added if the requiredItems are not in the cookbook
 
-# Assumption: the src given is the name of a recipe that exists in 
+# Assumption: the src given is the name of an item that exists in the cookbook
 def is_reachable(src: str, dest: str):
 	item = cookbook[src]
 	# Check if src is an ingredient, ingredients don't have outgoing edges
@@ -131,9 +131,9 @@ def is_reachable(src: str, dest: str):
 				return True
 			elif (required_item.name not in cookbook):
 				continue
-			item = cookbook[required_item.name]
-			if (item.item_type == "recipe"):
-				stack.append(item)
+			next_item = cookbook[required_item.name]
+			if (next_item.item_type == "recipe"):
+				stack.append(next_item)
 	return False
 # [TASK 3] ====================================================================
 # Endpoint that returns a summary of a recipe that corresponds to a query name
